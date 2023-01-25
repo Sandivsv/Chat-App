@@ -13,8 +13,10 @@ function App() {
 
 
     <Router>
-      <Route exact path="/" component={Join} />
-      <Route path="/chat" component={Chat} />
+      <Join></Join>
+      {/* <Chat></Chat> */}
+      {/* <Route exact path="/" component={Join} />
+      <Route path="/chat" component={Chat} /> */}
     </Router>
 
   );
