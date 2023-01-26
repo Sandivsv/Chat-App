@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { user } from "../join/join";
 import socketIo from "socket.io-client";
 import "./chat.css";
@@ -11,16 +11,27 @@ let socket;
 const ENDPOINT = "https://chat-backend-uzqx.onrender.com/";
 
 const Chat = () => {
+    const messageEl = useRef(null);
     const [id, setid] = useState("");
     const [messages, setMessages] = useState([]);
 
     const send = () => {
         const message = document.getElementById('chatInput').value;
-        socket.emit('message', { message, id })
-        document.getElementById('chatInput').value = "";
+        if(message){
+            socket.emit('message', { message, id })
+            document.getElementById('chatInput').value = "";
+        }
     }
 
     // console.log(messages);
+    useEffect(() => {
+        if (messageEl) {
+          messageEl.current.addEventListener('DOMNodeInserted', event => {
+            const { currentTarget: target } = event;
+            target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
+          });
+        }
+      }, [])
     
 
     useEffect(() => {
@@ -48,8 +59,9 @@ const Chat = () => {
             // socket.emit('disconnect');
             socket.off();
         }
-
     }, [])
+
+  
 
     useEffect(() => {
         socket.on('sendMessage', (data) => {
@@ -71,7 +83,7 @@ const Chat = () => {
                 </div>
                 
 
-                <div className='chatBox'>
+                <div className='chatBox' ref={messageEl}>
                     {messages.map((item, i) => <Message user={item.id === id ? '' : item.user} message={item.message} classs={item.id === id ? 'right' : 'left'} />)}
                 </div>
                 

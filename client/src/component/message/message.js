@@ -3,7 +3,6 @@ import "./message.css";
 
 
 const Message = ({ user, message, classs }) => {
-
     
     if (user) {
         return (
